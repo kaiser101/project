@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Fragment } from "react";
 import _ from "lodash";
 import TorrentComponent from "./TorrentComponent";
 import Box from "@mui/material/Box";
@@ -8,6 +8,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import LinearWithValueLabel from "./LinearWithValueLabel";
+import Typography from "@mui/material/Typography";
 
 const Torrents = () => {
     const [torrents, setTorrents] = useState([]);
@@ -64,7 +65,20 @@ const Torrents = () => {
                 {_.map(torrents, (torrent) => (
                     <ListItem key={torrent}>
                         <LinearWithValueLabel torrent={torrent} />
-                        <ListItemText primary={torrent.substring(0, 6)} />
+                        <ListItemText
+                            primary={
+                                <Fragment>
+                                    <Typography
+                                        sx={{ display: "inline" }}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                    >
+                                        {torrent.substring(0, 6)}
+                                    </Typography>
+                                </Fragment>
+                            }
+                        />
                     </ListItem>
                 ))}
             </List>
