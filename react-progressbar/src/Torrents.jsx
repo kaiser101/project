@@ -16,6 +16,8 @@ const Torrents = () => {
 
     const addTorrent = () => {
         setTorrents([...torrents, newTorrent.current.value]);
+        newTorrent.current.value = "";
+        newTorrent.current.focus();
     };
 
     const removeTorrent = () => {
@@ -25,6 +27,8 @@ const Torrents = () => {
                 (torrent) => torrent !== newTorrent.current.value
             )
         );
+        newTorrent.current.value = "";
+        newTorrent.current.focus();
     };
 
     return (
