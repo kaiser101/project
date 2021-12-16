@@ -18,6 +18,15 @@ const Torrents = () => {
         setTorrents([...torrents, newTorrent.current.value]);
     };
 
+    const removeTorrent = () => {
+        setTorrents(
+            _.remove(
+                torrents,
+                (torrent) => torrent !== newTorrent.current.value
+            )
+        );
+    };
+
     return (
         <div>
             <Box
@@ -36,6 +45,9 @@ const Torrents = () => {
                 />
                 <Button variant="outlined" onClick={() => addTorrent()}>
                     Add Torrent
+                </Button>
+                <Button variant="outlined" onClick={() => removeTorrent()}>
+                    Remove Torrent
                 </Button>
             </Box>
             <List
