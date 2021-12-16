@@ -3,13 +3,15 @@ import "./App.css";
 
 const ws = new WebSocket("ws://localhost:8080");
 
-ws.onopen = (event) => ws.send("ed9988d730d803047ca29cce1035851d1ef4af20");
-
 const App = () => {
+    ws.onopen = (event) => ws.send("70e6cc3986807aa9044f9542aa13bf57bf3cdbe3");
+
     const [msg, setMesg] = useState("");
 
     useEffect(() => {
         ws.onmessage = (event) => setMesg(event.data);
+
+        return ws.close();
     }, []);
 
     return <div className="App">{msg}</div>;

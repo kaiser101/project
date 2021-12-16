@@ -30,12 +30,12 @@ wss.on("connection", function connection(ws) {
             channel.consume(queue, (msg) => {
                 console.log("Received '%s'", msg.content.toString());
                 const obj = JSON.parse(msg.content.toString());
-                const key = Object.keys(obj);
-                const client = clientMap.get(key[0]);
-                client.send(obj[key[0]]);
+                const clientKey = obj.torrent.toString();
+                const client = clientMap.get(clientKey);
+                client.send(obj.progress);
                 setTimeout(() => {
                     channel.ack(msg);
-                }, 50);
+                }, 5);
             });
         });
     });
