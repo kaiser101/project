@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import LinearWithValueLabel from "./LinearWithValueLabel";
 
 const Torrents = () => {
     const [torrents, setTorrents] = useState([]);
@@ -37,11 +38,20 @@ const Torrents = () => {
                     Add Torrent
                 </Button>
             </Box>
-            {_.map(torrents, (torrent) => (
-                <div key={torrent}>
-                    <TorrentComponent torrent={torrent} />
-                </div>
-            ))}
+            <List
+                sx={{
+                    width: "100%",
+                    maxWidth: 600,
+                    bgcolor: "background.paper",
+                }}
+            >
+                {_.map(torrents, (torrent) => (
+                    <ListItem key={torrent}>
+                        <LinearWithValueLabel torrent={torrent} />
+                        <ListItemText primary={torrent.substring(0, 6)} />
+                    </ListItem>
+                ))}
+            </List>
         </div>
     );
 };
