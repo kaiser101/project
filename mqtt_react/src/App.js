@@ -3,7 +3,7 @@ import "./App.css";
 
 const ws = new WebSocket("ws://localhost:8080");
 
-ws.onopen = (event) => ws.send("abcdefgh");
+ws.onopen = (event) => ws.send("ed9988d730d803047ca29cce1035851d1ef4af20");
 
 const App = () => {
     const [msg, setMesg] = useState("");

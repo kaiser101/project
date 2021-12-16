@@ -4,9 +4,12 @@ import _ from "lodash";
 
 const wss = new WebSocketServer({ port: 8080, clientTracking: true });
 
+const clientMap = new Map();
+
 wss.on("connection", function connection(ws) {
     ws.on("message", function message(data) {
         console.log("received: %s", data);
+        clientMap.set(data.toString(), ws);
     });
 
     amqp.connect("amqp://localhost", (error0, connection) => {
@@ -26,13 +29,13 @@ wss.on("connection", function connection(ws) {
             console.log("Waiting for messages in %s", queue);
             channel.consume(queue, (msg) => {
                 console.log("Received '%s'", msg.content.toString());
-                // const obj = JSON.parse(msg.content.toString())
-                wss.clients.forEach((client) => {
-                    client.send(msg.content.toString());
-                });
+                const obj = JSON.parse(msg.content.toString());
+                const key = Object.keys(obj);
+                const client = clientMap.get(key[0]);
+                client.send(obj[key[0]]);
                 setTimeout(() => {
                     channel.ack(msg);
-                }, 1000);
+                }, 50);
             });
         });
     });
