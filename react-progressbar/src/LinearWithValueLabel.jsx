@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 // import mqtt from "mqtt";
 // import consumeMessage from "./utils/consumer";
+import _ from "lodash";
 
 function LinearProgressWithLabel(props) {
     return (
@@ -21,18 +22,18 @@ function LinearProgressWithLabel(props) {
     );
 }
 
-export default function LinearWithValueLabel(torrent) {
+export default function LinearWithValueLabel({ torrent }) {
     const [progress, setProgress] = useState(10);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            // consumeMessage("3D348C15F852E885E6F6AFA0F1A22927D37EDAA5");
-            setProgress((prevProgress) =>
-                prevProgress >= 100 ? 10 : prevProgress + 10
-            );
-        }, 800);
+        const ws = new WebSocket("ws://localhost:8080");
+
+        ws.onopen = (event) => ws.send(_.toLower(torrent));
+
+        ws.onmessage = (event) => setProgress(~~event.data);
+
         return () => {
-            clearInterval(timer);
+            ws.close();
         };
     }, []);
 

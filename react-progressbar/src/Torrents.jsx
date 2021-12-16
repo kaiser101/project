@@ -37,13 +37,11 @@ const Torrents = () => {
                     Add Torrent
                 </Button>
             </Box>
-            <ul>
-                {_.map(torrents, (torrent) => (
-                    <li key={torrent}>
-                        <TorrentComponent torrent={torrent} />
-                    </li>
-                ))}
-            </ul>
+            {_.map(torrents, (torrent) => (
+                <div key={torrent}>
+                    <TorrentComponent torrent={torrent} />
+                </div>
+            ))}
         </div>
     );
 };
