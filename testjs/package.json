@@ -1,0 +1,19 @@
+{
+  "name": "testjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "chart.js": "^3.6.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "ramda": "^0.27.1",
+    "requirejs": "^2.3.6"
+  }
+}
