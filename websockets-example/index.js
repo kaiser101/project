@@ -1,6 +1,25 @@
 import { WebSocketServer } from "ws";
 import amqp from "amqplib/callback_api.js";
 import _ from "lodash";
+import log4js from "log4js";
+
+log4js.configure({
+    appenders: {
+        torrent: {
+            type: "dateFile",
+            pattern: "yyyy-MM-dd",
+            keepFileExt: true, //
+            maxLogSize: 1024 * 1024 * 10, //1024 * 1024 * 1 = 1M
+            backups: 2, //
+            alwaysIncludePattern: true, //
+            daysToKeep: 3, //
+            filename: "websockets.log",
+        },
+    },
+    categories: { default: { appenders: ["websockets"], level: "info" } },
+});
+
+const logger = log4js.getLogger("websockets");
 
 const wss = new WebSocketServer({ port: 8080, clientTracking: true });
 
@@ -8,7 +27,7 @@ const clientMap = new Map();
 
 wss.on("connection", function connection(ws) {
     ws.on("message", function message(data) {
-        console.log("received: %s", data);
+        logger.info("received: %s", data);
         clientMap.set(_.toLower(data.toString()), ws);
     });
 
@@ -26,9 +45,9 @@ wss.on("connection", function connection(ws) {
             });
             channel.prefetch(1);
 
-            console.log("Waiting for messages in %s", queue);
+            logger.info("Waiting for messages in %s", queue);
             channel.consume(queue, (msg) => {
-                console.log("Received '%s'", msg.content.toString());
+                logger.info("Received '%s'", msg.content.toString());
                 const obj = JSON.parse(msg.content.toString());
                 const clientKey = obj.torrent.toString();
                 const client = clientMap.get(clientKey);
