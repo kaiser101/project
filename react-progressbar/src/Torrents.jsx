@@ -18,7 +18,6 @@ const Torrents = () => {
 
     const addTorrent = () => {
         setTorrents([...torrents, newTorrent.current.value]);
-        newTorrent.current.value = "";
         newTorrent.current.focus();
     };
 
@@ -26,10 +25,10 @@ const Torrents = () => {
         setTorrents(
             _.remove(
                 torrents,
-                (torrent) => torrent !== newTorrent.current.value
+                (torrent) =>
+                    _.toLower(torrent) !== _.toLower(newTorrent.current.value)
             )
         );
-        newTorrent.current.value = "";
         newTorrent.current.focus();
     };
 

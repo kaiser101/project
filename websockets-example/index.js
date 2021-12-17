@@ -9,7 +9,7 @@ const clientMap = new Map();
 wss.on("connection", function connection(ws) {
     ws.on("message", function message(data) {
         console.log("received: %s", data);
-        clientMap.set(data.toString(), ws);
+        clientMap.set(_.toLower(data.toString()), ws);
     });
 
     amqp.connect("amqp://localhost", (error0, connection) => {
@@ -32,7 +32,9 @@ wss.on("connection", function connection(ws) {
                 const obj = JSON.parse(msg.content.toString());
                 const clientKey = obj.torrent.toString();
                 const client = clientMap.get(clientKey);
-                client.send(obj.progress);
+                if (client) {
+                    client.send(obj.progress);
+                }
                 setTimeout(() => {
                     channel.ack(msg);
                 }, 5);
