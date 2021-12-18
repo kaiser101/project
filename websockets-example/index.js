@@ -55,7 +55,7 @@ wss.on("connection", function connection(ws) {
                 })
             )
         )
-        .catch(console.warn);
+        .catch(logger.warn);
 
     // amqp.connect("amqp://localhost", (error0, connection) => {
     //     if (error0) {
