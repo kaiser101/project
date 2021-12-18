@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import amqp from "amqplib/callback_api.js";
+import amqp from "amqplib";
 import _ from "lodash";
 import log4js from "log4js";
 
@@ -31,35 +31,61 @@ wss.on("connection", function connection(ws) {
         clientMap.set(_.toLower(data.toString()), ws);
     });
 
-    amqp.connect("amqp://localhost", (error0, connection) => {
-        if (error0) {
-            throw error0;
-        }
-        connection.createChannel((error1, channel) => {
-            if (error1) {
-                throw error1;
-            }
-            var queue = "torrent-queue";
-            channel.assertQueue(queue, {
-                durable: true,
-            });
-            channel.prefetch(1);
+    const amqpconn = amqp.connect("amqp://localhost");
 
-            logger.info("Waiting for messages in %s", queue);
-            channel.consume(queue, (msg) => {
-                logger.info("Received '%s'", msg.content.toString());
-                const obj = JSON.parse(msg.content.toString());
-                const clientKey = obj.torrent.toString();
-                const client = clientMap.get(clientKey);
-                if (client) {
-                    client.send(obj.progress);
-                }
-                setTimeout(() => {
-                    channel.ack(msg);
-                }, 5);
-            });
-        });
-    });
+    const queue = "torrent-queue";
+
+    amqpconn
+        .then((connection) => connection.createChannel())
+        .then((channel) =>
+            channel.assertQueue(queue).then((ok) =>
+                channel.consume(queue, (msg) => {
+                    if (msg !== null) {
+                        logger.info(msg.content.toString());
+
+                        const obj = JSON.parse(msg.content.toString());
+                        const clientKey = obj.torrent.toString();
+                        const client = clientMap.get(clientKey);
+                        if (client) {
+                            client.send(obj.progress);
+                        }
+
+                        channel.ack(msg);
+                    }
+                })
+            )
+        )
+        .catch(console.warn);
+
+    // amqp.connect("amqp://localhost", (error0, connection) => {
+    //     if (error0) {
+    //         throw error0;
+    //     }
+    //     connection.createChannel((error1, channel) => {
+    //         if (error1) {
+    //             throw error1;
+    //         }
+    //         var queue = "torrent-queue";
+    //         channel.assertQueue(queue, {
+    //             durable: true,
+    //         });
+    //         channel.prefetch(1);
+
+    //         logger.info("Waiting for messages in %s", queue);
+    //         channel.consume(queue, (msg) => {
+    //             logger.info("Received '%s'", msg.content.toString());
+    //             const obj = JSON.parse(msg.content.toString());
+    //             const clientKey = obj.torrent.toString();
+    //             const client = clientMap.get(clientKey);
+    //             if (client) {
+    //                 client.send(obj.progress);
+    //             }
+    //             setTimeout(() => {
+    //                 channel.ack(msg);
+    //             }, 5);
+    //         });
+    //     });
+    // });
 
     ws.send("something from server");
 });

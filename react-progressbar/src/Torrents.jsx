@@ -60,7 +60,7 @@ const Torrents = () => {
                     <Button variant="outlined" onClick={() => removeTorrent()}>
                         Remove Torrent
                     </Button>
-                    <Button variant="outlined" onClick={() => clearAll()}>
+                    <Button variant="outlined" onClick={() => removeAll()}>
                         Clear All
                     </Button>
                 </Box>
