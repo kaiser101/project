@@ -32,6 +32,11 @@ const Torrents = () => {
         newTorrent.current.focus();
     };
 
+    const removeAll = () => {
+        setTorrents([]);
+        newTorrent.current.focus();
+    };
+
     return (
         <div>
             <Container>
@@ -54,6 +59,9 @@ const Torrents = () => {
                     </Button>
                     <Button variant="outlined" onClick={() => removeTorrent()}>
                         Remove Torrent
+                    </Button>
+                    <Button variant="outlined" onClick={() => clearAll()}>
+                        Clear All
                     </Button>
                 </Box>
                 <List

@@ -5,7 +5,7 @@ import log4js from "log4js";
 
 log4js.configure({
     appenders: {
-        torrent: {
+        websockets: {
             type: "dateFile",
             pattern: "yyyy-MM-dd",
             keepFileExt: true, //
