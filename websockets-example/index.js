@@ -57,35 +57,5 @@ wss.on("connection", function connection(ws) {
         )
         .catch(logger.warn);
 
-    // amqp.connect("amqp://localhost", (error0, connection) => {
-    //     if (error0) {
-    //         throw error0;
-    //     }
-    //     connection.createChannel((error1, channel) => {
-    //         if (error1) {
-    //             throw error1;
-    //         }
-    //         var queue = "torrent-queue";
-    //         channel.assertQueue(queue, {
-    //             durable: true,
-    //         });
-    //         channel.prefetch(1);
-
-    //         logger.info("Waiting for messages in %s", queue);
-    //         channel.consume(queue, (msg) => {
-    //             logger.info("Received '%s'", msg.content.toString());
-    //             const obj = JSON.parse(msg.content.toString());
-    //             const clientKey = obj.torrent.toString();
-    //             const client = clientMap.get(clientKey);
-    //             if (client) {
-    //                 client.send(obj.progress);
-    //             }
-    //             setTimeout(() => {
-    //                 channel.ack(msg);
-    //             }, 5);
-    //         });
-    //     });
-    // });
-
     ws.send("something from server");
 });
